@@ -2,9 +2,26 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Page Title</title>
+  <title>Rock Paper Scissors</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="status-bar">
+    <div id="score">
+      <div id="user-score" class="score">User Score: 0</div>
+      <div id="computer-score" class="score">Computer Score: 0</div>
+    </div>
+    <div id="message-board">Let's play!</div>
+  </div>
+  <div id="game">
+    <div class="choice" id="rock">Rock</div>
+    <div class="choice" id="paper">Paper</div>
+    <div class="choice" id="scissors">Scissors</div>
+  </div>
+  <div id="footer">Created by LF</div>
   <script type="text/javascript" src="code.js"></script>
 </body>
 </html>

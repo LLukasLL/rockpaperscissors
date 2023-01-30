@@ -45,66 +45,89 @@ function playRound(ComputerSelection, PlayerSelection) {
     return winner;
 }
 
-function InputCheck(userinput) {
-    let PlayerSelection = userinput.toLowerCase();
-    if (PlayerSelection === 'rock' || PlayerSelection === 'paper' || PlayerSelection === 'scissors') {
-        return PlayerSelection;
-    } else {
-        return 'no valid choice';
-    }
+// added stuff
+
+let ComputerWins = 0;
+let PlayerWins = 0;
+let rounds_played = 0;
+
+function updateScore(ComputerWins, PlayerWins) {
+    div_computer_score = document.querySelector('#computer-score');
+    div_user_score = document.querySelector('#user-score');
+    document.getElementById("computer-score").innerHTML = "Computer Score: " + ComputerWins;
+    document.getElementById("user-score").innerHTML = "User Score: " + PlayerWins;
 }
 
-function Input() {
-    let check = false;
-    let input = ' x ';
-    input = InputCheck(prompt('Make your coice ("rock", "paper", "scissors"):'));
-    if (input !==  'no valid choice') {
-        return input;
-    }
-    while (check === false) {
-        input = InputCheck(prompt('Choice not valid! Choose "rock", "paper" or "scissors":'));
-        if (input !== 'no valid choice') {
-            check = true
-        }
-    }
-    return input
+function loose_css() {
+    message_board = document.getElementById('message-board');
+    message_board.style.color = "white";
+    message_board.style['background-color'] = "red";
 }
 
-function game(){
-    let PlayerSelection = 'not definied ...';
-    let ComputerSelection = 'not definied ...';
-    let remainingGames;
-    let ComputerWins = 0;
-    let PlayerWins = 0;
-    let winner = 'not definied ...';
+function win_css() {
+    message_board = document.getElementById('message-board');
+    message_board.style.color = "white";
+    message_board.style['background-color'] = "green";
+}
 
-    console.log('Start of Game')
-    for (let i = 0 ; i < 5; i++ ) {
-        remainingGames = 5 - i;
-        console.log('Remaining games:' + remainingGames);
-        PlayerSelection = Input();
-        ComputerSelection = getComputerChoice();
-        winner = playRound(ComputerSelection, PlayerSelection)
+function tie_css() {
+    message_board = document.getElementById('message-board');
+    message_board.style.color = "grey";
+    message_board.style['background-color'] = "yellow";
+}
+
+function inputChoice(e) {
+    PlayerSelection = e.srcElement.id;
+    ComputerSelection = getComputerChoice();
+    winner = playRound(PlayerSelection, ComputerSelection);
+    message_board = document.getElementById('message-board');
+    if (rounds_played < 5) {
         if (winner === 'computer') {
-            message = 'You lose! ' + ComputerSelection + ' beats ' + PlayerSelection;
+            document.getElementById("message-board").innerHTML = 'You lose! ' + ComputerSelection + ' beats ' + PlayerSelection;
             ++ComputerWins;
+            loose_css();
         } else if (winner === 'player') {
-            message = 'You won! ' +  PlayerSelection + ' beats ' + ComputerSelection;
+            document.getElementById("message-board").innerHTML = 'You won! ' +  PlayerSelection + ' beats ' + ComputerSelection;
             ++PlayerWins;
+            win_css();
         } else if (winner = 'no one') {
-            message = 'Tie!';
+            document.getElementById("message-board").innerHTML = 'Tie!';
+            tie_css();
         }
-        console.log(message);
-        console.log( );
-        }
-    if (ComputerWins > PlayerWins) {
-        console.log('The Computer won the Game ' + ComputerWins + ' to ' + PlayerWins);
-    } else if (PlayerWins > ComputerWins) {
-        console.log('You won the Game ' + PlayerWins + ' to ' + ComputerWins)
+        rounds_played++;
     }
-    else {
-        console.log('The game has tied!')
+    updateScore(ComputerWins, PlayerWins);
+    if (rounds_played >=5){
+        const div_result = document.createElement("div");
+        div_result.style['color'] = 'white';
+        div_result.style.height = '400px';
+        div_result.style.width = '800px';
+        div_result.style["font-size"] = '64px';
+        div_result.style["display"] = 'flex';
+        div_result.style["justify-content"] = 'center';
+        div_result.style["align-items"] = 'center';
+        if (ComputerWins > PlayerWins) {
+            message = 'The Computer won the Game ' + ComputerWins + ' to ' + PlayerWins;
+            div_result.style['background-color'] = 'red';
+
+        } else if (PlayerWins > ComputerWins) {
+            message = 'You won the Game ' + PlayerWins + ' to ' + ComputerWins;
+            div_result.style['background-color'] = 'green';
+        }
+        else {
+            message = 'The game has tied '+ PlayerWins + ' to ' + ComputerWins;
+            div_result.style['background-color'] = 'yellow';
+            div_result.style['color'] = 'black';
+        }
+        div_result.innerHTML = message;
+        // insert before here
+        const game = document.getElementById("game");
+        const choices = Array.from(document.querySelectorAll('.choice'));
+        choices.forEach(choice => choice.remove());
+        game.appendChild(div_result);
     }
 }
 
-game()
+const choices = Array.from(document.querySelectorAll('.choice'));
+choices.forEach(choice => choice.addEventListener('click', inputChoice));
+
